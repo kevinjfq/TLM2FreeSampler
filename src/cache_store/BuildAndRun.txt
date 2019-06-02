@@ -1,0 +1,7 @@
+# Sequence of commands to build and run this example.
+mkdir build
+cd build
+cmake -G "Unix Makefiles" ..
+make
+./unittest_CacheLine
+./unittest_CacheStore

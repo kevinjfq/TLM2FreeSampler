@@ -1,0 +1,3 @@
+Just wanted to acknowledge some folks whose work inspired and enabled this.
+Stephen Engelman - https://github.com/engest
+Doulos - https://www.doulos.com/ (especially https://www.doulos.com/knowhow/systemc/tlm2/tutorial__1/)

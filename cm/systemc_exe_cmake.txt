@@ -1,0 +1,12 @@
+include_directories(${PROJECT_SOURCE_DIR}/inc)
+ 
+# add the exe
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/main.cpp)
+target_link_libraries(${PROJECT_NAME} systemc-2.3.2)
+install(TARGETS ${PROJECT_NAME} DESTINATION ${PROJECT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE})
+
+# Get the target's SOURCES property and assign it to MYAPP_SOURCES
+get_property(${PROJECT_NAME}_SOURCES TARGET ${PROJECT_NAME} PROPERTY SOURCES)
+
+message("Target executable ${PROJECT_NAME}")						# Prints: project name
+message("Target executable sources: ${${PROJECT_NAME}_SOURCES}")	# Prints: project source files

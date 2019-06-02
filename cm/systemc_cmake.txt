@@ -1,0 +1,6 @@
+set (SYSTEMC_HOME /opt/tools/accellera/systemc)
+include_directories("${SYSTEMC_HOME}/include")
+include_directories("${SYSTEMC_HOME}/include/sysc")
+include_directories("${SYSTEMC_HOME}/include/tlm_core")
+include_directories("${SYSTEMC_HOME}/include/tlm_utils")
+link_directories("${SYSTEMC_HOME}/lib-linux64")
