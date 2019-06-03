@@ -1,3 +1,17 @@
 Just wanted to acknowledge some folks whose work inspired and enabled this.
 Stephen Engelman - https://github.com/engest
 Doulos - https://www.doulos.com/ (especially https://www.doulos.com/knowhow/systemc/tlm2/tutorial__1/)
+
+Also, I'd like to give a shout out to the following folks whose packages I include in my docker container:
+
+
+
+catch2 - an awesome lightweight unittest framework for C++
+  https://github.com/catchorg/Catch2
+RapidJSON   - for processing JSON from within C++
+  https://github.com/miloyip/rapidjson.git
+fmtlib/fmt  - for C++ formatting
+  https://github.com/fmtlib/fmt
+  https://fmt.dev/latest/index.html
+  http://www.nrstickley.com/the-fmt-library/
+vscode - great editor (This is here courtesy of engtest/scmodeldev but I've not actually used it.)

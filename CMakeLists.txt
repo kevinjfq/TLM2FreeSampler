@@ -6,5 +6,5 @@ set (CMAKE_CXX_COMPILER "/usr/bin/clang++")
 set (CMAKE_CXX_STANDARD 11)
 
 include(cm/systemc_cmake.txt)
-project (TLM2FreeSampler)
+project (tlm2freesampler)
 include(cm/systemc_exe_cmake.txt)

@@ -7,6 +7,9 @@
 #ifndef RealCache_H
 #define RealCache_H
 
+#define FMT_HEADER_ONLY
+#include "fmt/format.h"
+
 // Needed for the simple_target_socket
 #define SC_INCLUDE_DYNAMIC_PROCESSES
 
@@ -157,6 +160,45 @@ struct RealCache: sc_module
   virtual void dump_trans( const char* msg, tlm::tlm_generic_payload& trans )
   {
     return;
+    fmt::print(
+      "{}: cmd={} adr={} ptr={} len={} wid={}\n"
+      , msg
+      , trans.get_command()
+      , trans.get_address()
+      , trans.get_data_ptr()
+      , trans.get_data_length()
+      , trans.get_streaming_width()
+    );
+
+    /*
+    // This style of named args works with my C++ 11 but I don't consider it an improvement on the positional approach above.
+    fmt::print(
+          "{msg}: cmd={cmd} adr={adr} ptr={ptr} len={len} wid={wid}\n"
+          , fmt::arg("msg", msg)
+          , fmt::arg("cmd", trans.get_command())
+          , fmt::arg("adr", trans.get_address())
+          , fmt::arg("ptr", trans.get_data_ptr())
+          , fmt::arg("len", trans.get_data_length())
+          , fmt::arg("wid", trans.get_streaming_width())
+        );
+    // This style of named args doesnt work with my C++ 11 ?!?
+    fmt::print(
+          "{msg}: cmd={cmd} adr={adr} ptr={ptr} len={len} wid={wid}\n"
+          , "msg"_a=msg
+          , "cmd"_a=trans.get_command()
+          , "adr"_a=trans.get_address()
+          , "ptr"_a=trans.get_data_ptr()
+          , "len"_a=trans.get_data_length()
+          , "wid"_a=trans.get_streaming_width()
+        );
+        // , "byt"_a=trans.get_byte_enable_ptr()
+    */
+  }
+  /*
+  // Here is a cout+checvrons version of dump_trans which is not as nice as the fmt version.
+  virtual void dump_trans( const char* msg, tlm::tlm_generic_payload& trans )
+  {
+    return;
     cout << msg << " : " ;
     tlm::tlm_command cmd = trans.get_command();
     sc_dt::uint64    adr = trans.get_address();
@@ -173,13 +215,28 @@ struct RealCache: sc_module
     << " wid=" << wid
     << endl;
   }
+  */
 
+  /*
+  // Here is an fmt version of dump_line.  I don't like it.  using 'cout' seems easier.
+  virtual void dump_line( const char* msg, uint8_t* dataline )
+  {
+    return;
+    fmt::memory_buffer out;
+    format_to(out, "{} :", msg);
+    for( int jj=0; jj<m_cacheStore.p_LineSize; jj++) {
+      format_to(out, " [{}]={}", jj, (int)dataline[jj] );
+    }
+    fmt::print("{}\n",fmt::to_string(out) );
+  }
+  */
+  // Here is the typical approach using cout and chevrons.
   virtual void dump_line( const char* msg, uint8_t* dataline )
   {
     return;
     cout << msg << " : " ;
     for( int jj=0; jj<m_cacheStore.p_LineSize; jj++)
-      cout << "[" << jj << "]=" << (int)dataline[jj];
+      cout << " [" << jj << "]=" << (int)dataline[jj];
     cout<<endl;
   }
 

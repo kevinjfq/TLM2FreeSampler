@@ -1,7 +1,7 @@
 # Sequence of commands to build and run this example.
-cd TLM2FreeSampler
+cd tlm2freesampler
 mkdir build
 cd build
 cmake -G "Unix Makefiles" ..
 make
-./TLM2FreeSampler
+./tlm2freesampler

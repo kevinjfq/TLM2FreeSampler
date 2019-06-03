@@ -11,6 +11,7 @@ RUN apt-get -y update && \
 		cmake \
 		make \
 		libgtest-dev \
+    valgrind \
 		vim \
 		curl \
 		gnupg \
@@ -41,30 +42,38 @@ RUN cd /usr/src/gtest && \
 RUN git clone https://github.com/miloyip/rapidjson.git && \
 	cp -r rapidjson/include/rapidjson/ /usr/local/include
 
-ENV CC /usr/bin/clang 
-ENV CXX /usr/bin/clang++ 
-ENV DOWNLOADS /opt/downloads 
-ENV ACCELLERA_SYSTEMC_VER 2.3.2 
-ENV ACCELLERA_SYSTEMC_FILE_NOEXT systemc-$ACCELLERA_SYSTEMC_VER 
-ENV ACCELLERA_SYSTEMC_FILE $ACCELLERA_SYSTEMC_FILE_NOEXT.tar.gz 
-ENV ACCELLERA_SYSTEMC_URL http://www.accellera.org/images/downloads/standards/systemc/$ACCELLERA_SYSTEMC_FILE 
-ENV SYSTEMC_HOME /opt/tools/accellera/systemc 
-ENV DEVELOPER_USER devuser 
-ENV DEVELOPER_USER_HOME /home/$DEVELOPER_USER 
-ENV DEVELOPER_USER_WORK $DEVELOPER_USER_HOME/work 
-ENV EXAMPLE_PROJECT $DEVELOPER_USER_WORK/model_example
-ENV TLM2FREESAMPLER_PROJECT $DEVELOPER_USER_WORK/TLM2FreeSampler
+# Get the fmtlib/fmt formatting library.  Headers only -- not building a shared lib.
+# This means this meacro should be definedbefore including headers:
+#   #define FMT_HEADER_ONLY
+#   #include "fmt/format.h"
+RUN git clone https://github.com/fmtlib/fmt.git && \
+  mkdir /usr/local/include/fmt && \
+  cp fmt/include/fmt/* /usr/local/include/fmt/
 
-RUN mkdir -p $SYSTEMC_HOME && mkdir -p $DOWNLOADS && cd $DOWNLOADS && wget -c $ACCELLERA_SYSTEMC_URL && tar xfz $ACCELLERA_SYSTEMC_FILE && cd $ACCELLERA_SYSTEMC_FILE_NOEXT && ./configure 'CXXFLAGS=-std=c++11' --prefix=$SYSTEMC_HOME && make && make install 
-RUN useradd -ms /bin/bash $DEVELOPER_USER 
-RUN mkdir $DEVELOPER_USER_WORK && cd $DEVELOPER_USER_WORK && git clone https://github.com/engest/model_example.git && cd /home && chown -R devuser.devuser devuser && cd $EXAMPLE_PROJECT 
-RUN cd $DEVELOPER_USER_WORK && git clone https://github.com/kevinjfq/tlm2freesampler.git && cd /home && chown -R devuser.devuser devuser && cd $TLM2FREESAMPLER_PROJECT 
-USER $DEVELOPER_USER 
-ENV HOME $DEVELOPER_USER_HOME 
-RUN cd $DEVELOPER_USER_HOME && code --install-extension ms-vscode.cpptools 
-RUN cd $DEVELOPER_USER_HOME && code --install-extension mitaki28.vscode-clang 
-RUN cd $DEVELOPER_USER_HOME && code --install-extension twxs.cmake 
-RUN cd $DEVELOPER_USER_HOME && code --install-extension vector-of-bool.cmake-tools 
+ENV CC /usr/bin/clang
+ENV CXX /usr/bin/clang++
+ENV DOWNLOADS /opt/downloads
+ENV ACCELLERA_SYSTEMC_VER 2.3.2
+ENV ACCELLERA_SYSTEMC_FILE_NOEXT systemc-$ACCELLERA_SYSTEMC_VER
+ENV ACCELLERA_SYSTEMC_FILE $ACCELLERA_SYSTEMC_FILE_NOEXT.tar.gz
+ENV ACCELLERA_SYSTEMC_URL http://www.accellera.org/images/downloads/standards/systemc/$ACCELLERA_SYSTEMC_FILE
+ENV SYSTEMC_HOME /opt/tools/accellera/systemc
+ENV DEVELOPER_USER devuser
+ENV DEVELOPER_USER_HOME /home/$DEVELOPER_USER
+ENV DEVELOPER_USER_WORK $DEVELOPER_USER_HOME/work
+ENV EXAMPLE_PROJECT $DEVELOPER_USER_WORK/model_example
+ENV TLM2FREESAMPLER_PROJECT $DEVELOPER_USER_WORK/tlm2freesampler
+
+RUN mkdir -p $SYSTEMC_HOME && mkdir -p $DOWNLOADS && cd $DOWNLOADS && wget -c $ACCELLERA_SYSTEMC_URL && tar xfz $ACCELLERA_SYSTEMC_FILE && cd $ACCELLERA_SYSTEMC_FILE_NOEXT && ./configure 'CXXFLAGS=-std=c++11' --prefix=$SYSTEMC_HOME && make && make install
+RUN useradd -ms /bin/bash $DEVELOPER_USER
+RUN mkdir $DEVELOPER_USER_WORK && cd $DEVELOPER_USER_WORK && git clone https://github.com/engest/model_example.git && cd /home && chown -R devuser.devuser devuser && cd $EXAMPLE_PROJECT
+RUN cd $DEVELOPER_USER_WORK && git clone https://github.com/kevinjfq/tlm2freesampler.git && cd /home && chown -R devuser.devuser devuser && cd $TLM2FREESAMPLER_PROJECT
+USER $DEVELOPER_USER
+ENV HOME $DEVELOPER_USER_HOME
+RUN cd $DEVELOPER_USER_HOME && code --install-extension ms-vscode.cpptools
+RUN cd $DEVELOPER_USER_HOME && code --install-extension mitaki28.vscode-clang
+RUN cd $DEVELOPER_USER_HOME && code --install-extension twxs.cmake
+RUN cd $DEVELOPER_USER_HOME && code --install-extension vector-of-bool.cmake-tools
 RUN cd $DEVELOPER_USER_HOME && code --install-extension vscodevim.vim WORKDIR $EXAMPLE_PROJECT
 
 COPY helloworld.sh /bin
