@@ -76,6 +76,5 @@ RUN cd $DEVELOPER_USER_HOME && code --install-extension twxs.cmake
 RUN cd $DEVELOPER_USER_HOME && code --install-extension vector-of-bool.cmake-tools
 RUN cd $DEVELOPER_USER_HOME && code --install-extension vscodevim.vim WORKDIR $EXAMPLE_PROJECT
 
-COPY helloworld.sh /bin
-CMD ["/bin/helloworld.sh"]
-CMD ["echo", "hello world from the dockerfile"]
+COPY build_and_test_sampler.sh /bin
+CMD ["/bin/build_and_test_sampler.sh"]
