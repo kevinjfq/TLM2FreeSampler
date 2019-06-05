@@ -68,6 +68,9 @@ RUN mkdir -p $SYSTEMC_HOME && mkdir -p $DOWNLOADS && cd $DOWNLOADS && wget -c $A
 RUN useradd -ms /bin/bash $DEVELOPER_USER
 RUN mkdir $DEVELOPER_USER_WORK && cd $DEVELOPER_USER_WORK && git clone https://github.com/engest/model_example.git && cd /home && chown -R devuser.devuser devuser && cd $EXAMPLE_PROJECT
 RUN cd $DEVELOPER_USER_WORK && git clone https://github.com/kevinjfq/tlm2freesampler.git && cd /home && chown -R devuser.devuser devuser && cd $TLM2FREESAMPLER_PROJECT
+COPY build_and_test_sampler.sh /bin
+RUN /bin/bash -c 'chmod +x /bin/build_and_test_sampler.sh'
+
 USER $DEVELOPER_USER
 ENV HOME $DEVELOPER_USER_HOME
 RUN cd $DEVELOPER_USER_HOME && code --install-extension ms-vscode.cpptools
@@ -76,5 +79,4 @@ RUN cd $DEVELOPER_USER_HOME && code --install-extension twxs.cmake
 RUN cd $DEVELOPER_USER_HOME && code --install-extension vector-of-bool.cmake-tools
 RUN cd $DEVELOPER_USER_HOME && code --install-extension vscodevim.vim WORKDIR $EXAMPLE_PROJECT
 
-COPY build_and_test_sampler.sh /bin
 CMD ["/bin/build_and_test_sampler.sh"]
