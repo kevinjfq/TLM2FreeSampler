@@ -1,0 +1,10 @@
+sudo: required
+services:
+  - docker
+
+script:
+  - docker build -t kevinjfq/tlm2freesampler .
+  - docker run --name tlm2freesampler_container kevinjfq/tlm2freesampler
+
+after_script:
+  - docker images
